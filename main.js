@@ -1,48 +1,36 @@
-let searchbar = document.querySelector(".searchbar");
-let container = document.querySelector(".container")
+let searchbar = document.querySelector("#recipe");
+let button = document.querySelector(".button");
+let container = document.querySelector(".container");
 
+button.addEventListener("click", function search() {
+  container.innerHTML = "";
+  fetch("https://crossorigin.me/http://www.recipepuppy.com/api/?q=" + recipe.value)
+    .then(function(response) {
 
-// 2. Create our Ajax Request
-fetch("https://crossorigin.me/http://www.recipepuppy.com/api/?q=" + (recipe.search.value))
-  .then(
-    function(response) {
-      // We process the response accordingly.
       if (response.status !== 200) {
         console.log(response.status);
         return;
       }
-      response.json().then(function(object) {
-        // console.log(object.name);
-        //
-        // console.log(object.results);
+      
+      response.json().then(function(obj) {
 
+        obj.results.forEach(function(result) {
 
-        // function() {
-        //   data.forEach(function(element) {
-        //     if (element.thumbnail === ) {
-        //       console.log(element.title);
-        //     }
-        //   });
-        // }
+          let imagesource = result.thumbnail
+          let title = result.title
+          let link = result.href
 
-
-        searchbar.innerHTML += `
-        <img src="${object.thumbnail}">
-        <div> ${object.title}</div>
-        <div><a href ="${object.html_url}"></a></div>
-`
-
-        container.innerHTML += `
-        <img src="${object.thumbnail}">
-        <div> <span>Title </span> ${object.title}</div>
-        <div> <span>  </span> <a href ="${object.href}"></a></div>
-`
-
-      });
-    }
-  )
-
-  .catch(function(err) {
-    console.log("Fetch Error :-S", err);
-
-  });
+          result = `
+                  <div class="wrapper">
+                      <a href="${link}"><img src="${imagesource}" onerror="this.src='puppy__11.jpg'"</a></p>
+                      <a href="${link}"><h3>${title}<h3></a>
+                  </div>
+                   `
+          container.innerHTML += result;
+        });
+      })
+    })
+    .catch(function(error) {
+      console.log('Fetch Error :-S', err);
+    });
+})
